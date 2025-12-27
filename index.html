@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibe Code Portfolio</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #ff6b6b;
+      --secondary: #4ecdc4;
+      --accent: #ffe66d;
+      --dark: #2d3436;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--dark);
+      color: white;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    .cursor {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--primary);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 10000;
+      transition: transform 0.1s, background 0.3s;
+    }
+
+    .cursor-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 10001;
+    }
+
+    .cursor.hover {
+      transform: scale(2);
+      background: rgba(255, 107, 107, 0.2);
+    }
+
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 20px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      background: rgba(45, 52, 54, 0.8);
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      padding: 5px 0;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-content {
+      text-align: center;
+    }
+
+    .glitch {
+      font-size: 80px;
+      font-weight: 900;
+      position: relative;
+      display: inline-block;
+    }
+
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .glitch::before {
+      left: 2px;
+      text-shadow: -2px 0 var(--primary);
+      clip: rect(24px, 550px, 90px, 0);
+      animation: glitch-anim 3s infinite linear alternate-reverse;
+    }
+
+    .glitch::after {
+      left: -2px;
+      text-shadow: -2px 0 var(--secondary);
+      clip: rect(85px, 550px, 140px, 0);
+      animation: glitch-anim2 2s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitch-anim {
+      0% { clip: rect(10px, 9999px, 31px, 0); }
+      20% { clip: rect(80px, 9999px, 100px, 0); }
+      40% { clip: rect(30px, 9999px, 60px, 0); }
+      60% { clip: rect(90px, 9999px, 120px, 0); }
+      80% { clip: rect(15px, 9999px, 45px, 0); }
+      100% { clip: rect(60px, 9999px, 85px, 0); }
+    }
+
+    @keyframes glitch-anim2 {
+      0% { clip: rect(60px, 9999px, 90px, 0); }
+      20% { clip: rect(10px, 9999px, 40px, 0); }
+      40% { clip: rect(70px, 9999px, 100px, 0); }
+      60% { clip: rect(20px, 9999px, 50px, 0); }
+      80% { clip: rect(80px, 9999px, 110px, 0); }
+      100% { clip: rect(30px, 9999px, 70px, 0); }
+    }
+
+    .subtitle {
+      font-size: 24px;
+      margin-top: 20px;
+      opacity: 0.8;
+    }
+
+    .neon-text {
+      color: var(--accent);
+      text-shadow:
+        0 0 5px var(--accent),
+        0 0 10px var(--accent),
+        0 0 20px var(--accent),
+        0 0 40px var(--accent);
+      animation: neon-flicker 2s infinite;
+    }
+
+    @keyframes neon-flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        text-shadow:
+          0 0 5px var(--accent),
+          0 0 10px var(--accent),
+          0 0 20px var(--accent),
+          0 0 40px var(--accent);
+      }
+      20%, 24%, 55% {
+        text-shadow: none;
+      }
+    }
+
+    .section {
+      padding: 100px 50px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-title {
+      font-size: 48px;
+      text-align: center;
+      margin-bottom: 60px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 30px;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.5s, box-shadow 0.5s;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) rotateX(5deg);
+      box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(78, 205, 196, 0.2);
+    }
+
+    .card-content {
+      transform: translateZ(30px);
+    }
+
+    .card h3 {
+      font-size: 24px;
+      margin-bottom: 15px;
+      color: var(--secondary);
+    }
+
+    .card p {
+      opacity: 0.7;
+      line-height: 1.6;
+    }
+
+    .card-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .parallax-section {
+      height: 80vh;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .parallax-bg {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255, 107, 107, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(78, 205, 196, 0.3) 0%, transparent 50%);
+      animation: rotate 30s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .parallax-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .floating-shapes {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .shape {
+      position: absolute;
+      opacity: 0.5;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .shape:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+    .shape:nth-child(2) { top: 60%; right: 15%; animation-delay: 1s; }
+    .shape:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 2s; }
+    .shape:nth-child(4) { top: 30%; right: 25%; animation-delay: 3s; }
+    .shape:nth-child(5) { bottom: 20%; right: 10%; animation-delay: 4s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-30px) rotate(180deg); }
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .gallery-item {
+      aspect-ratio: 1;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .gallery-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      opacity: 0.8;
+      transform: scale(0);
+      transition: transform 0.4s;
+    }
+
+    .gallery-item:hover::before {
+      transform: scale(1);
+    }
+
+    .gallery-item::after {
+      content: attr(data-number);
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      font-weight: bold;
+      color: white;
+      transform: scale(0);
+      transition: transform 0.4s 0.1s;
+    }
+
+    .gallery-item:hover::after {
+      transform: scale(1);
+    }
+
+    .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+    .gallery-item:nth-child(4) { grid-column: span 2; }
+
+    .gallery-bg {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg,
+        hsl(calc(0 * 30), 70%, 60%),
+        hsl(calc(0 * 30 + 60), 70%, 60%));
+      transition: transform 0.5s;
+    }
+
+    .gallery-item:hover .gallery-bg {
+      transform: scale(1.1);
+    }
+
+    .contact {
+      text-align: center;
+    }
+
+    .contact-btn {
+      display: inline-block;
+      padding: 20px 60px;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .contact-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(255, 107, 107, 0.4);
+    }
+
+    .contact-btn::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+      );
+      transform: rotate(45deg);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% { left: -50%; }
+      100% { left: 150%; }
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+    }
+
+    .scroll-indicator span {
+      display: block;
+      width: 30px;
+      height: 50px;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 15px;
+      position: relative;
+    }
+
+    .scroll-indicator span::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: scroll-dot 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(10px); }
+    }
+
+    @keyframes scroll-dot {
+      0%, 100% { opacity: 1; top: 8px; }
+      50% { opacity: 0.3; top: 25px; }
+    }
+
+    @media (max-width: 768px) {
+      .glitch { font-size: 40px; }
+      .gallery { grid-template-columns: repeat(2, 1fr); }
+      .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 1; }
+      .gallery-item:nth-child(4) { grid-column: span 1; }
+      nav { padding: 15px 20px; }
+      .nav-links { display: none; }
+      .cursor, .cursor-dot { display: none; }
+      body { cursor: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor"></div>
+  <div class="cursor-dot"></div>
+  <canvas id="particles"></canvas>
+  <nav>
+    <div class="logo hover-target">VIBE</div>
+    <ul class="nav-links">
+      <li><a href="#home" class="hover-target">首页</a></li>
+      <li><a href="#work" class="hover-target">作品</a></li>
+      <li><a href="#gallery" class="hover-target">画廊</a></li>
+      <li><a href="#contact" class="hover-target">联系</a></li>
+    </ul>
+  </nav>
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <h1 class="glitch" data-text="HELLO WORLD">HELLO WORLD</h1>
+      <p class="subtitle">I'm a <span class="neon-text">Creative Developer</span></p>
+    </div>
+    <div class="scroll-indicator"><span></span></div>
+  </section>
+  <section class="section" id="work">
+    <h2 class="section-title">What I Do</h2>
+    <div class="cards-container">
+      <div class="card hover-target">
+        <div class="card-content">
+          <div class="card-icon">🎨</div>
+          <h3>UI/UX Design</h3>
+          <p>Creating beautiful, intuitive interfaces that users love.</p>
+        </div>
+      </div>
+      <div class="card hover-target">
+        <div class="card-content">
+          <div class="card-icon">💻</div>
+          <h3>Web Development</h3>
+          <p>Building fast, responsive websites with modern technologies.</p>
+        </div>
+      </div>
+      <div class="card hover-target">
+        <div class="card-content">
+          <div class="card-icon">🎮</div>
+          <h3>Creative Coding</h3>
+          <p>WebGL, shaders, particles, and visual effects.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="parallax-section">
+    <div class="parallax-bg" data-speed="0.3"></div>
+    <div class="floating-shapes">
+      <div class="shape hover-target">✨</div>
+      <div class="shape hover-target">🚀</div>
+      <div class="shape hover-target">💫</div>
+      <div class="shape hover-target">⭐</div>
+      <div class="shape hover-target">🌟</div>
+    </div>
+    <div class="parallax-content">
+      <h2 style="font-size: 60px; margin-bottom: 20px;" class="hover-target">Dream Big</h2>
+      <p style="font-size: 24px; opacity: 0.8;">Code is poetry. Design is art.</p>
+    </div>
+  </section>
+  <section class="section" id="gallery">
+    <h2 class="section-title">Selected Works</h2>
+    <div class="gallery">
+      <div class="gallery-item hover-target" data-number="01"><div class="gallery-bg"></div></div>
+      <div class="gallery-item hover-target" data-number="02"><div class="gallery-bg"></div></div>
+      <div class="gallery-item hover-target" data-number="03"><div class="gallery-bg"></div></div>
+      <div class="gallery-item hover-target" data-number="04"><div class="gallery-bg"></div></div>
+      <div class="gallery-item hover-target" data-number="05"><div class="gallery-bg"></div></div>
+      <div class="gallery-item hover-target" data-number="06"><div class="gallery-bg"></div></div>
+    </div>
+  </section>
+  <section class="section contact" id="contact">
+    <h2 class="section-title">Let's Create Together</h2>
+    <button class="contact-btn hover-target">Get In Touch</button>
+  </section>
+  <script>
+    const cursor = document.querySelector('.cursor')
+    const cursorDot = document.querySelector('.cursor-dot')
+    let mouseX = 0, mouseY = 0
+    let cursorX = 0, cursorY = 0
+    let dotX = 0, dotY = 0
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX
+      mouseY = e.clientY
+    })
+
+    function animateCursor() {
+      cursorX += (mouseX - cursorX) * 0.1
+      cursorY += (mouseY - cursorY) * 0.1
+      dotX += (mouseX - dotX) * 0.3
+      dotY += (mouseY - dotY) * 0.3
+      cursor.style.left = cursorX - 10 + 'px'
+      cursor.style.top = cursorY - 10 + 'px'
+      cursorDot.style.left = dotX - 4 + 'px'
+      cursorDot.style.top = dotY - 4 + 'px'
+      requestAnimationFrame(animateCursor)
+    }
+    animateCursor()
+
+    document.querySelectorAll('.hover-target').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'))
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'))
+    })
+
+    const canvas = document.getElementById('particles')
+    const ctx = canvas.getContext('2d')
+    let particles = []
+    let mouse = { x: null, y: null }
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+    resizeCanvas()
+    window.addEventListener('resize', resizeCanvas)
+
+    canvas.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX
+      mouse.y = e.clientY
+    })
+
+    canvas.addEventListener('mouseleave', () => {
+      mouse.x = null
+      mouse.y = null
+    })
+
+    class Particle {
+      constructor() {
+        this.reset()
+      }
+      reset() {
+        this.x = Math.random() * canvas.width
+        this.y = Math.random() * canvas.height
+        this.size = Math.random() * 3 + 1
+        this.speedX = Math.random() * 1 - 0.5
+        this.speedY = Math.random() * 1 - 0.5
+        this.color = `hsl(${Math.random() * 60 + 330}, 70%, 60%)`
+        this.opacity = Math.random() * 0.5 + 0.2
+      }
+      update() {
+        this.x += this.speedX
+        this.y += this.speedY
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+          this.reset()
+        }
+        if (mouse.x !== null) {
+          const dx = mouse.x - this.x
+          const dy = mouse.y - this.y
+          const distance = Math.sqrt(dx * dx + dy * dy)
+          if (distance < 150) {
+            const angle = Math.atan2(dy, dx)
+            const force = (150 - distance) / 150
+            this.x -= Math.cos(angle) * force * 2
+            this.y -= Math.sin(angle) * force * 2
+          }
+        }
+      }
+      draw() {
+        ctx.beginPath()
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
+        ctx.fillStyle = this.color
+        ctx.globalAlpha = this.opacity
+        ctx.fill()
+      }
+    }
+
+    function initParticles() {
+      particles = []
+      const number = Math.min((canvas.width * canvas.height) / 15000, 150)
+      for (let i = 0; i < number; i++) {
+        particles.push(new Particle())
+      }
+    }
+    initParticles()
+    window.addEventListener('resize', initParticles)
+
+    function connectParticles() {
+      for (let a = 0; a < particles.length; a++) {
+        for (let b = a + 1; b < particles.length; b++) {
+          const dx = particles[a].x - particles[b].x
+          const dy = particles[a].y - particles[b].y
+          const distance = Math.sqrt(dx * dx + dy * dy)
+          if (distance < 150) {
+            const opacity = (150 - distance) / 150 * 0.4
+            ctx.beginPath()
+            ctx.strokeStyle = particles[a].color
+            ctx.globalAlpha = opacity
+            ctx.lineWidth = 1
+            ctx.moveTo(particles[a].x, particles[a].y)
+            ctx.lineTo(particles[b].x, particles[b].y)
+            ctx.stroke()
+          }
+        }
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      particles.forEach(p => {
+        p.update()
+        p.draw()
+      })
+      connectParticles()
+      requestAnimationFrame(animateParticles)
+    }
+    animateParticles()
+
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset
+      document.querySelectorAll('[data-speed]').forEach(el => {
+        const speed = el.dataset.speed
+        el.style.transform = `translateY(${scrolled * speed}px)`
+      })
+    })
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault()
+        const target = document.querySelector(this.getAttribute('href'))
+        target.scrollIntoView({ behavior: 'smooth' })
+      })
+    })
+  </script>
+</body>
+</html>
